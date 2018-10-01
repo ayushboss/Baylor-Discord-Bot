@@ -1,8 +1,15 @@
 import discord
 import asyncio
+import json
 
-description = "Baylor-Bot"
-bot_prefix = "!"
+def read_config():
+	with open("config.json") as configFile:
+		return json.load(configFile)
+	
+config = read_config()
+
+description = config["description"]
+bot_prefix = config["prefix"]
 
 client = discord.Client()
 
@@ -18,4 +25,7 @@ async def on_message(message):
 	if message.content.startswith('!help'):
 		await client.send_message(message.channel, "HELP")
 
-client.run("Mzk0NjY3NjMyMzk1MDI2NDQz.DSHrWQ.YkIOkrzE3G-C7eTAUoOYbPAS8hw");
+try:
+	client.run(config["token"])
+except Exception as e:
+	print("Error connecting to Discord: "+e)
